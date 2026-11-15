@@ -89,10 +89,6 @@
     limit = 20; persist(); renderSelection(); renderPlaces(); scheduleSearch();
   }
   function renderPlaces() {
-    const included = ['confirmed visits'];
-    if (state.transit) included.push('pass-throughs and departures');
-    if (state.uncertain) included.push('optional or unverified stops');
-    $('coverage-summary').textContent = `Counts include ${included.join(' + ')}${included.length === 1 ? ' only' : ''}.${state.estimates ? '' : ' Clear price units only.'}`;
     const counts = new Map();
     for (const t of prepared) for (const id of t.placeIds) counts.set(id, (counts.get(id) || 0) + 1);
     const chosen = new Set(selected());
@@ -108,7 +104,7 @@
       const count = counts.get(p.id) || 0;
       const merged = p.members.length > 1;
       const label = merged ? `${p.type} · ${p.members.length} merged names` : p.type;
-      return `<label class="place-row ${chosen.has(p.id) ? 'selected' : ''}"><input type="checkbox" data-place="${escape(p.id)}" ${chosen.has(p.id) ? 'checked' : ''}><span class="place-info"><span class="place-name">${escape(shortName(p.id))}</span><span class="place-type">${escape(label)}${p.confidence !== 'high' ? ' · identity unverified' : ''}</span></span><span class="place-count ${count ? '' : 'zero'}" title="Tours matching the tour options. Category tabs only change which places are displayed.">${count ? `${count} ${count === 1 ? 'tour' : 'tours'}` : '0 with these options'}</span><span class="place-icon" aria-hidden="true">${icons[category(p)]}</span></label>`;
+      return `<label class="place-row ${chosen.has(p.id) ? 'selected' : ''}"><input type="checkbox" data-place="${escape(p.id)}" ${chosen.has(p.id) ? 'checked' : ''}><span class="place-info"><span class="place-name">${escape(shortName(p.id))}</span><span class="place-type">${escape(label)}${p.confidence !== 'high' ? ' · identity unverified' : ''}</span></span><span class="place-count ${count ? '' : 'zero'}" title="Tours matching your preferences">${count} ${count === 1 ? 'tour' : 'tours'}</span><span class="place-icon" aria-hidden="true">${icons[category(p)]}</span></label>`;
     }).join('') || '<p class="no-merges">No places match your search.</p>';
     $('place-list').scrollTop = scroll;
     if (focusedPlace) $('place-list').querySelector(`[data-place="${CSS.escape(focusedPlace)}"]`)?.focus({ preventScroll: true });
@@ -174,7 +170,7 @@
     }
     if (location.protocol === 'file:') { fallback(); return; }
     try {
-      worker = new Worker('worker.js');
+      worker = new Worker('worker.js?v=20261115-2');
       worker.onmessage = event => receive(event.data);
       worker.onerror = event => { event.preventDefault(); fallback(); };
       worker.postMessage(input);
@@ -273,13 +269,19 @@
     $(id).onchange = event => { state[key] = event.target.checked; limit = 20; persist(); refresh(); };
   }
   $('max-tours').onchange = event => { state.maxTours = Number(event.target.value); limit = 20; persist(); scheduleSearch(); };
-  $('settings-toggle').onclick = () => { $('settings').hidden = !$('settings').hidden; $('settings-toggle').setAttribute('aria-expanded', String(!$('settings').hidden)); };
   function openTourOptions() {
-    $('settings').hidden = false;
+    if (!$('preferences-dialog').open) $('preferences-dialog').showModal();
     $('settings-toggle').setAttribute('aria-expanded', 'true');
-    $('settings').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
-  $('place-options-open').onclick = openTourOptions;
+  $('settings-toggle').onclick = openTourOptions;
+  $('preferences-close').onclick = () => $('preferences-dialog').close();
+  $('preferences-done').onclick = () => $('preferences-dialog').close();
+  $('preferences-dialog').addEventListener('close', () => $('settings-toggle').setAttribute('aria-expanded', 'false'));
+  $('preferences-dialog').addEventListener('click', event => {
+    if (event.target !== $('preferences-dialog')) return;
+    const r = event.target.getBoundingClientRect();
+    if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) event.target.close();
+  });
   $('results').addEventListener('click', event => {
     if (event.target.closest('#example-plan')) {
       state.selected = ['santa-monica', 'varandinha-caves', 'viana', 'cabo-wreck']; limit = 20; persist(); refresh();

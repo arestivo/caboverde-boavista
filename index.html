@@ -7,11 +7,11 @@
   <meta name="description" content="Choose your essential Boa Vista places. Find excursion combinations, ranked by fewest tours and then estimated price.">
   <title>Boa Vista — Your island, your itinerary</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css">
-  <script defer src="data.js"></script>
-  <script defer src="solver.js"></script>
-  <script defer src="config.js"></script>
-  <script defer src="app.js"></script>
+  <link rel="stylesheet" href="styles.css?v=20261115-2">
+  <script defer src="data.js?v=20261115-2"></script>
+  <script defer src="solver.js?v=20261115-2"></script>
+  <script defer src="config.js?v=20261115-2"></script>
+  <script defer src="app.js?v=20261115-2"></script>
 </head>
 <body>
   <header class="topbar">
@@ -27,23 +27,16 @@
 
     <div class="planner-grid">
       <aside class="places-panel" id="places-panel" aria-label="Choose essential places">
-        <div class="panel-heading"><div><span class="step-label">01 / MAKE IT YOURS</span><h2>Essential places <span class="count-pill" id="selected-count">0</span></h2></div><button id="clear-selection" class="text-button">Clear</button></div>
+        <div class="panel-heading"><div><span class="step-label">01 / MAKE IT YOURS</span><h2>Essential places <span class="count-pill" id="selected-count">0</span></h2></div><div class="place-heading-actions"><button id="clear-selection" class="text-button">Clear</button><button type="button" class="preferences-button" id="settings-toggle" aria-label="Preferences" title="Preferences" aria-haspopup="dialog" aria-controls="preferences-dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="9" cy="18" r="2"/></svg></button></div></div>
         <label class="search-wrap"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="place-search" type="search" placeholder="Search places or alternate names…" autocomplete="off" aria-label="Search places or alternate names"></label>
         <div class="filter-tabs" aria-label="Filter places" id="place-filters"><button class="active" data-filter="all" aria-pressed="true">All</button><button data-filter="coast" aria-pressed="false">Coast</button><button data-filter="inland" aria-pressed="false">Inland</button><button data-filter="town" aria-pressed="false">Towns</button><button data-filter="food" aria-pressed="false">Food & culture</button></div>
-        <div class="place-options-hint"><span id="coverage-summary">Counts include confirmed visits only.</span> <button class="text-button" id="place-options-open" aria-controls="settings">Change tour options ↗</button></div>
         <div class="place-list" id="place-list"></div>
         <p class="place-hint">Two names for one place? <button class="text-button" id="merge-shortcut">Merge them</button></p>
       </aside>
 
       <section class="results-panel" id="results-panel" aria-labelledby="results-heading">
-        <div class="results-top"><div><span class="step-label">02 / FIND YOUR WAY</span><h2 id="results-heading">Your possible itineraries</h2></div><button class="button button-quiet" id="settings-toggle" aria-expanded="true" aria-controls="settings">Tour options <span aria-hidden="true">☷</span></button></div>
+        <div class="results-top"><div><span class="step-label">02 / FIND YOUR WAY</span><h2 id="results-heading">Your possible itineraries</h2></div></div>
         <div class="trip-bar"><div class="travelers"><label for="travelers">Travelers</label><div class="stepper"><button id="travelers-minus" aria-label="One fewer traveler">−</button><input id="travelers" type="number" min="1" max="12" value="2" aria-label="Number of adult travelers"><button id="travelers-plus" aria-label="One more traveler">+</button></div></div><div class="sort-note"><span class="sort-icon" aria-hidden="true">↓</span><span>Fewest tours first<br><strong>Then lowest total price</strong></span></div></div>
-        <div class="settings" id="settings">
-          <label class="setting"><input id="allow-transit" type="checkbox"><span>Count pass-throughs and departures<small>Include places a tour travels through without a visit.</small></span></label>
-          <label class="setting"><input id="allow-uncertain" type="checkbox"><span>Count optional or unverified stops<small>Include selectable stops, inferred places and catalogue-only routes.</small></span></label>
-          <label class="setting"><input id="allow-estimates" type="checkbox" checked><span>Include prices with unclear units<small>Treat these starting prices as per adult. Marked as estimates in results.</small></span></label>
-          <div class="settings-bottom"><label>Maximum tours <select id="max-tours"><option value="0">Any number</option><option value="1">1 tour</option><option value="2">2 tours</option><option value="3">3 tours</option><option value="4">4 tours</option><option value="5">5 tours</option><option value="6">6 tours</option></select></label><button class="text-button" id="export-plan">Export your choices ↗</button></div>
-        </div>
         <div id="essential-chips" class="essential-chips" aria-label="Selected essential places"></div>
         <div class="result-meta"><p id="result-status" role="status" aria-live="polite">Start with the places that matter to you.</p><span id="loading-indicator" class="loader" hidden aria-hidden="true"></span></div>
         <div id="results"></div>
@@ -57,6 +50,16 @@
   <footer><span class="footer-brand">boa vista<span> / YOUR ISLAND, YOUR WAY</span></span><span id="data-footer">72 places · 111 excursions · Works entirely in your browser</span></footer>
   <div class="mobile-dock" id="mobile-dock"><span><strong id="mobile-count">0</strong> essential places</span><button class="button button-primary" id="mobile-results">See itineraries <span aria-hidden="true">↗</span></button></div>
 
+  <dialog id="preferences-dialog" aria-labelledby="preferences-title">
+    <div class="dialog-top"><h2 id="preferences-title">Preferences</h2><button type="button" class="close-button" id="preferences-close" aria-label="Close preferences">×</button></div>
+    <div class="settings" id="settings">
+      <label class="setting"><input id="allow-transit" type="checkbox"><span>Count pass-throughs and departures<small>Include places a tour travels through without a visit.</small></span></label>
+      <label class="setting"><input id="allow-uncertain" type="checkbox"><span>Count optional or unverified stops<small>Include selectable stops, inferred places and catalogue-only routes.</small></span></label>
+      <label class="setting"><input id="allow-estimates" type="checkbox" checked><span>Include prices with unclear units<small>Treat these starting prices as per adult. Marked as estimates in results.</small></span></label>
+      <div class="settings-bottom"><label>Maximum tours <select id="max-tours"><option value="0">Any number</option><option value="1">1 tour</option><option value="2">2 tours</option><option value="3">3 tours</option><option value="4">4 tours</option><option value="5">5 tours</option><option value="6">6 tours</option></select></label><button class="text-button" id="export-plan">Export your choices ↗</button></div>
+    </div>
+    <div class="preferences-footer"><button type="button" class="button button-primary" id="preferences-done">Done</button></div>
+  </dialog>
   <dialog id="manage-dialog" aria-labelledby="manage-title"><div class="dialog-top"><div><p class="eyebrow">YOUR LOCAL KNOWLEDGE</p><h2 id="manage-title">Same place, different names?</h2></div><button class="close-button" id="manage-close" aria-label="Close place manager">×</button></div><p class="dialog-intro">Merge two places so a tour visiting either one counts for both. Your changes are saved on this device.</p><form id="merge-form"><label>Keep this name<select id="merge-first" required></select></label><span class="merge-symbol" aria-hidden="true">↔</span><label>Also known as<select id="merge-second" required></select></label><button class="button button-primary" type="submit">Merge places</button></form><p id="merge-feedback" role="status"></p><div class="merge-list-heading"><h3>Your place merges</h3><span id="merge-count">0 changes</span></div><div id="merge-list"></div><div class="dialog-footer"><p>The original Gran Kenian / Grand (Little) Canyon merge is already included in the data.</p><div><button class="button button-outline" id="export-settings">Export changes</button><label class="button button-outline file-button">Import changes<input type="file" id="import-settings" accept="application/json,.json"></label></div></div></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
 </body>

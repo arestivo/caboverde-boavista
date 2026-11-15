@@ -1,4 +1,4 @@
-importScripts('solver.js');
+importScripts('solver.js?v=20261115-2');
 self.onmessage = ({ data }) => {
   const iterator = TourSolver.solve(data);
   let next;
