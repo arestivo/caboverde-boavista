@@ -1,6 +1,19 @@
 (() => {
   'use strict';
-  const DATA = globalThis.BOAVISTA_DATA;
+  const normalizePlaceName = text => String(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const hiddenKeywords = (globalThis.BOAVISTA_CONFIG?.hiddenPlaceKeywords || []).map(normalizePlaceName).filter(Boolean);
+  const visiblePlaces = globalThis.BOAVISTA_DATA.places.filter(place =>
+    ![place.name, ...place.aliases].some(name => hiddenKeywords.some(keyword => normalizePlaceName(name).includes(keyword))));
+  const visiblePlaceIds = new Set(visiblePlaces.map(place => place.id));
+  const DATA = {
+    ...globalThis.BOAVISTA_DATA,
+    places: visiblePlaces,
+    tours: globalThis.BOAVISTA_DATA.tours.map(tour => ({
+      ...tour,
+      places: tour.places.filter(place => visiblePlaceIds.has(place.id)),
+    })),
+  };
   const Solver = globalThis.TourSolver;
   const $ = id => document.getElementById(id);
   const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
