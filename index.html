@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#193e39">
+  <meta name="description" content="Choose your essential Boa Vista places. Find excursion combinations, ranked by fewest tours and then estimated price.">
+  <title>Boa Vista — Your island, your itinerary</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script>
+  <script defer src="solver.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Boa Vista planner home"><span class="brand-icon" aria-hidden="true">b.</span><span>boa vista<span class="brand-sub">THE ISLAND PLANNER</span></span></a>
+    <div class="top-actions"><span class="local-label"><span class="status-dot"></span>Saved on this device</span><button class="button button-quiet" id="manage-open">Manage places <span aria-hidden="true">↗</span></button></div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy"><p class="eyebrow">CAPE VERDE · 16° N, 23° W</p><h1 id="page-title">Your island.<br>Your <em>essentials.</em></h1><p class="hero-intro">Pick the places you don’t want to miss.<br>We’ll find the tours that bring them together.</p></div>
+      <div class="island-art" aria-hidden="true"><svg viewBox="0 0 360 255"><defs><pattern id="lines" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-25)"><path d="M0 0V10" stroke="#c5cbbc" stroke-width=".6"/></pattern></defs><path d="M115 32C144 17 187 19 211 40L239 63L245 93L269 117L263 161L244 199L215 226L172 237L139 219L115 194L83 168L70 134L90 106L91 68Z" fill="#e6e4d4"/><path d="M115 32C144 17 187 19 211 40L239 63L245 93L269 117L263 161L244 199L215 226L172 237L139 219L115 194L83 168L70 134L90 106L91 68Z" fill="url(#lines)"/><g fill="none" stroke="#b7c1ae" stroke-width="1"><path d="M124 51Q178 30 219 73T239 171Q211 224 168 210T98 147Q102 104 124 51Z"/><path d="M137 74Q175 50 209 91T220 165Q195 204 164 188T119 143Q120 105 137 74Z"/><path d="M153 96Q180 75 197 109T199 159Q179 180 158 163T141 129Z"/></g><path d="M104 113Q166 104 158 156T203 203" fill="none" stroke="#ac6447" stroke-dasharray="3 5" stroke-linecap="round"/><g fill="#193e39" stroke="#faf8f1" stroke-width="4"><circle cx="104" cy="113" r="5"/><circle cx="158" cy="148" r="5"/><circle cx="203" cy="203" r="5"/></g><text x="35" y="93">SAL REI</text><text x="183" y="146">VIANA</text><text x="204" y="229">SANTA MÓNICA</text><path d="M308 37V15m-4 6 4-6 4 6" fill="none" stroke="#193e39"/><text x="304" y="49">N</text></svg><span class="art-caption">A LITTLE LESS PLANNING. A LITTLE MORE MORABEZA.</span></div>
+    </section>
+
+    <div class="planner-grid">
+      <aside class="places-panel" id="places-panel" aria-label="Choose essential places">
+        <div class="panel-heading"><div><span class="step-label">01 / MAKE IT YOURS</span><h2>Essential places <span class="count-pill" id="selected-count">0</span></h2></div><button id="clear-selection" class="text-button">Clear</button></div>
+        <label class="search-wrap"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="place-search" type="search" placeholder="Search places or alternate names…" autocomplete="off" aria-label="Search places or alternate names"></label>
+        <div class="filter-tabs" aria-label="Filter places" id="place-filters"><button class="active" data-filter="all" aria-pressed="true">All</button><button data-filter="coast" aria-pressed="false">Coast</button><button data-filter="inland" aria-pressed="false">Inland</button><button data-filter="town" aria-pressed="false">Towns</button><button data-filter="food" aria-pressed="false">Food & culture</button></div>
+        <div class="place-list" id="place-list"></div>
+        <p class="place-hint">Two names for one place? <button class="text-button" id="merge-shortcut">Merge them</button></p>
+      </aside>
+
+      <section class="results-panel" id="results-panel" aria-labelledby="results-heading">
+        <div class="results-top"><div><span class="step-label">02 / FIND YOUR WAY</span><h2 id="results-heading">Your possible itineraries</h2></div><button class="button button-quiet" id="settings-toggle" aria-expanded="false" aria-controls="settings">Preferences <span aria-hidden="true">☷</span></button></div>
+        <div class="trip-bar"><div class="travelers"><label for="travelers">Travelers</label><div class="stepper"><button id="travelers-minus" aria-label="One fewer traveler">−</button><input id="travelers" type="number" min="1" max="12" value="2" aria-label="Number of adult travelers"><button id="travelers-plus" aria-label="One more traveler">+</button></div></div><div class="sort-note"><span class="sort-icon" aria-hidden="true">↓</span><span>Fewest tours first<br><strong>Then lowest total price</strong></span></div></div>
+        <div class="settings" id="settings" hidden>
+          <label class="setting"><input id="allow-transit" type="checkbox"><span>Count pass-throughs and departures<small>Include places a tour travels through without a visit.</small></span></label>
+          <label class="setting"><input id="allow-uncertain" type="checkbox"><span>Count optional or unverified stops<small>Include selectable stops, inferred places and catalogue-only routes.</small></span></label>
+          <label class="setting"><input id="allow-estimates" type="checkbox" checked><span>Include prices with unclear units<small>Treat these starting prices as per adult. Marked as estimates in results.</small></span></label>
+          <div class="settings-bottom"><label>Maximum tours <select id="max-tours"><option value="0">Any number</option><option value="1">1 tour</option><option value="2">2 tours</option><option value="3">3 tours</option><option value="4">4 tours</option><option value="5">5 tours</option><option value="6">6 tours</option></select></label><button class="text-button" id="export-plan">Export your choices ↗</button></div>
+        </div>
+        <div id="essential-chips" class="essential-chips" aria-label="Selected essential places"></div>
+        <div class="result-meta"><p id="result-status" role="status" aria-live="polite">Start with the places that matter to you.</p><span id="loading-indicator" class="loader" hidden aria-hidden="true"></span></div>
+        <div id="results"></div>
+        <div class="result-actions" id="result-actions" hidden><button class="button button-outline" id="load-more">Show more combinations <span aria-hidden="true">↓</span></button><button class="button button-outline" id="search-longer" hidden>Search for longer</button></div>
+        <p class="pricing-note" id="pricing-note">Estimated starting prices in USD, saved 15 Nov 2026. Group prices are applied where stated. Check dates, schedules and final prices with the operator.</p>
+      </section>
+    </div>
+    <section class="how-it-works"><div><span class="small-number">01</span><h3>Your must-sees</h3><p>A beach, a village, a little adventure. Select what matters to you.</p></div><div><span class="small-number">02</span><h3>A smarter combination</h3><p>Each tour contributes an essential place. No unnecessary extra tours.</p></div><div><span class="small-number">03</span><h3>Make it happen</h3><p>Compare the options and open the original listings to book.</p></div></section>
+  </main>
+
+  <footer><span class="footer-brand">boa vista<span> / YOUR ISLAND, YOUR WAY</span></span><span id="data-footer">72 places · 111 excursions · Works entirely in your browser</span></footer>
+  <div class="mobile-dock" id="mobile-dock"><span><strong id="mobile-count">0</strong> essential places</span><button class="button button-primary" id="mobile-results">See itineraries <span aria-hidden="true">↗</span></button></div>
+
+  <dialog id="manage-dialog" aria-labelledby="manage-title"><div class="dialog-top"><div><p class="eyebrow">YOUR LOCAL KNOWLEDGE</p><h2 id="manage-title">Same place, different names?</h2></div><button class="close-button" id="manage-close" aria-label="Close place manager">×</button></div><p class="dialog-intro">Merge two places so a tour visiting either one counts for both. Your changes are saved on this device.</p><form id="merge-form"><label>Keep this name<select id="merge-first" required></select></label><span class="merge-symbol" aria-hidden="true">↔</span><label>Also known as<select id="merge-second" required></select></label><button class="button button-primary" type="submit">Merge places</button></form><p id="merge-feedback" role="status"></p><div class="merge-list-heading"><h3>Your place merges</h3><span id="merge-count">0 changes</span></div><div id="merge-list"></div><div class="dialog-footer"><p>The original Gran Kenian / Grand (Little) Canyon merge is already included in the data.</p><div><button class="button button-outline" id="export-settings">Export changes</button><label class="button button-outline file-button">Import changes<input type="file" id="import-settings" accept="application/json,.json"></label></div></div></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>
