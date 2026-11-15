@@ -30,14 +30,15 @@
         <div class="panel-heading"><div><span class="step-label">01 / MAKE IT YOURS</span><h2>Essential places <span class="count-pill" id="selected-count">0</span></h2></div><button id="clear-selection" class="text-button">Clear</button></div>
         <label class="search-wrap"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="place-search" type="search" placeholder="Search places or alternate names…" autocomplete="off" aria-label="Search places or alternate names"></label>
         <div class="filter-tabs" aria-label="Filter places" id="place-filters"><button class="active" data-filter="all" aria-pressed="true">All</button><button data-filter="coast" aria-pressed="false">Coast</button><button data-filter="inland" aria-pressed="false">Inland</button><button data-filter="town" aria-pressed="false">Towns</button><button data-filter="food" aria-pressed="false">Food & culture</button></div>
+        <div class="place-options-hint"><span id="coverage-summary">Counts include confirmed visits only.</span> <button class="text-button" id="place-options-open" aria-controls="settings">Change tour options ↗</button></div>
         <div class="place-list" id="place-list"></div>
         <p class="place-hint">Two names for one place? <button class="text-button" id="merge-shortcut">Merge them</button></p>
       </aside>
 
       <section class="results-panel" id="results-panel" aria-labelledby="results-heading">
-        <div class="results-top"><div><span class="step-label">02 / FIND YOUR WAY</span><h2 id="results-heading">Your possible itineraries</h2></div><button class="button button-quiet" id="settings-toggle" aria-expanded="false" aria-controls="settings">Preferences <span aria-hidden="true">☷</span></button></div>
+        <div class="results-top"><div><span class="step-label">02 / FIND YOUR WAY</span><h2 id="results-heading">Your possible itineraries</h2></div><button class="button button-quiet" id="settings-toggle" aria-expanded="true" aria-controls="settings">Tour options <span aria-hidden="true">☷</span></button></div>
         <div class="trip-bar"><div class="travelers"><label for="travelers">Travelers</label><div class="stepper"><button id="travelers-minus" aria-label="One fewer traveler">−</button><input id="travelers" type="number" min="1" max="12" value="2" aria-label="Number of adult travelers"><button id="travelers-plus" aria-label="One more traveler">+</button></div></div><div class="sort-note"><span class="sort-icon" aria-hidden="true">↓</span><span>Fewest tours first<br><strong>Then lowest total price</strong></span></div></div>
-        <div class="settings" id="settings" hidden>
+        <div class="settings" id="settings">
           <label class="setting"><input id="allow-transit" type="checkbox"><span>Count pass-throughs and departures<small>Include places a tour travels through without a visit.</small></span></label>
           <label class="setting"><input id="allow-uncertain" type="checkbox"><span>Count optional or unverified stops<small>Include selectable stops, inferred places and catalogue-only routes.</small></span></label>
           <label class="setting"><input id="allow-estimates" type="checkbox" checked><span>Include prices with unclear units<small>Treat these starting prices as per adult. Marked as estimates in results.</small></span></label>

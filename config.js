@@ -5,4 +5,9 @@ globalThis.BOAVISTA_CONFIG = {
     'sal rei',
     'djeu',
   ],
+  // Each keyword merges all matching visible places into one choice.
+  // Names and alternate names are checked; an exact name is kept when possible.
+  mergePlaceKeywords: [
+    'rabil',
+  ],
 };

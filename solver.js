@@ -3,7 +3,9 @@
   const popcount = value => { let count = 0; while (value) { value &= value - 1n; count++; } return count; };
   const compare = (a, b) => a.tourIds.length - b.tourIds.length || a.cost - b.cost || a.tourIds.join(',').localeCompare(b.tourIds.join(','));
 
-  function resolvePlaces(places, merges) {
+  function resolvePlaces(places, merges, mergeKeywords = []) {
+    const normalizeName = text => String(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
     const parent = new Map(places.map(p => [p.id, p.id]));
     const find = id => {
       if (!parent.has(id)) return null;
@@ -12,6 +14,18 @@
       while (parent.get(id) !== id) { const next = parent.get(id); parent.set(id, current); id = next; }
       return current;
     };
+    for (const keyword of mergeKeywords.map(normalizeName).filter(Boolean)) {
+      const matching = places.filter(place => [place.name, ...place.aliases]
+        .some(name => normalizeName(name).includes(keyword)));
+      const representative = matching.find(place => normalizeName(place.name) === keyword)
+        || matching.find(place => place.aliases.some(name => normalizeName(name) === keyword))
+        || matching[0];
+      if (!representative) continue;
+      for (const place of matching) {
+        const a = find(representative.id), b = find(place.id);
+        if (a !== b) parent.set(b, a);
+      }
+    }
     for (const merge of merges) {
       const a = find(merge.a), b = find(merge.b);
       if (a && b && a !== b) parent.set(b, a);
